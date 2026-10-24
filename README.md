@@ -89,3 +89,9 @@ The longer-term goal is to investigate whether the TV can act as a receiver for 
 ## Keeping this repository current
 
 Record new commands and outputs with the date, the exact device/build they came from, and whether a conclusion is **observed**, **inferred**, or **unverified**. Never commit Wi-Fi passwords, account tokens, or device serial numbers. The README should remain a concise entry point; put detailed raw observations and caveats in [DEVICE-IDENTIFIERS.md](DEVICE-IDENTIFIERS.md).
+
+
+## Research notes
+
+- [Research log](RESEARCH-LOG.md) — dated searches, assessment, and safety notes.
+- [Wi-Fi driver diagnostics (2026-10-24)](WIFI-DIAGNOSTICS-2026-10-24.md) — read-only wireless-driver and casting evidence, with interpretation limits.
