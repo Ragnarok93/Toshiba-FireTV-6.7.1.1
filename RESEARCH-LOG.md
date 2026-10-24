@@ -47,3 +47,20 @@ The module name points to the MediaTek MT76x8 USB driver family; it does not con
 Collect the outputs of `dumpsys wifi`, `dumpsys wifip2p`, and filtered wireless-related `logcat` using the read-only command shared in the project conversation. Use those results to narrow down the P2P failure and wireless-display capabilities before proposing any system changes.
 
 No device modifications, partition writes, firmware flashing, or bootloader changes were performed.
+
+
+### Follow-up diagnostic result (2026-10-24)
+The user supplied output from `dumpsys wifi` and `dumpsys wifip2p`; the wireless-related `logcat` tail was too large to paste and is not yet available for review.
+
+Observed:
+- The Wi-Fi framework reports a completed supplicant connection and `CONNECTED/CONNECTED` network state on `wlan0`; the connection uses 5 GHz Wi-Fi. Routine scanning has successful results.
+- The Wi-Fi framework's chipset-information block reports blank firmware and driver version strings and `Supported Feature set: 0`.
+- `dumpsys wifip2p` reports `curState=P2pNotSupportedState`, no formed group, no peer discovery, and P2P network availability `false` / state `IDLE`.
+
+Assessment:
+- Normal Wi-Fi client connectivity is working, but the currently running Android/driver stack is reporting Wi-Fi Direct as unsupported. This is a strong practical blocker for conventional Miracast, which typically uses Wi-Fi Direct.
+- This does not prove the physical radio is inherently incapable of P2P; the cause could be in the driver, firmware, platform configuration, or framework integration. Blank version strings and feature set zero may reflect unavailable chipset reporting and should not be interpreted as proof that the radio has no capabilities.
+- These results do not establish Google Cast receiver support either way. Google Cast can use the existing LAN, but requires compatible receiver software and media integration.
+- The filtered wireless `logcat` output has not been reviewed, so no specific underlying driver or firmware error has been established.
+
+Next: inspect the relevant `logcat` lines if available and continue read-only investigation. Do not infer a root method or recommend partition/firmware changes from this output alone.
