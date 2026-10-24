@@ -64,3 +64,25 @@ Assessment:
 - The filtered wireless `logcat` output has not been reviewed, so no specific underlying driver or firmware error has been established.
 
 Next: inspect the relevant `logcat` lines if available and continue read-only investigation. Do not infer a root method or recommend partition/firmware changes from this output alone.
+
+## 2026-10-24 — Focused root / bootloader-unlock research update
+
+### Exact platform cross-reference
+A public postmarketOS device entry for the Insignia Full HD Fire TV Edition (`amazon-blanche`) identifies an Amlogic T950Z, Cortex-A53, and kernel 3.14.29. It marks the device as not yet unlockable and records a contributor's Insignia unit on Fire OS 6.2.8.9 as not unlockable. A contributor profile independently lists that same `amazon-blanche` device and Fire OS version as not unlockable. This is a close platform match to this Toshiba's `blanche` device/codename and kernel, but is not proof that every firmware build is unexploitable.
+
+Sources:
+- https://wiki.postmarketos.org/wiki/Insignia_Fire_TV_Edition_%28Full_HD%29_%28amazon-blanche%29
+- https://wiki.postmarketos.org/wiki/User%3ABenTheTechGuy
+
+### Searches and compatibility assessment
+Searches were run for `AFTBAMR311`, `BLANCHE_Uboot_AMZN_build-185241`, `blanche Fire TV root`, `txlx Fire TV unlock`, and Toshiba HD Fire TV bootloader unlocking. No public exploit or documented unlock procedure matching the exact U-Boot tag or build fingerprint was found in these searches.
+
+Known exploit families found in the search are not presently validated for this target:
+- FireFU documentation targets particular Fire TV Cube/Pendant hardware and boot chains. No evidence found that it supports this `blanche` television.
+- GhostLock-based Fire OS projects surfaced for newer MediaTek-based devices; no evidence found that it supports this Amlogic T950Z / kernel 3.14.29 target.
+- Amlogic boot-ROM exploits documented for specific Cube SoCs cannot be assumed to work merely because this device also uses an Amlogic platform.
+
+### Current conclusion
+No verified root or bootloader-unlock method has been found for the exact Toshiba `AFTBAMR311` / `blanche` device and reported firmware. The closest public platform reference currently points to an unlockability limitation, so the next productive avenue is deeper boot-chain/firmware-specific research (exact Fire OS build mapping, U-Boot/BL2/boot-ROM identification, and any device-specific security research), not trying unrelated exploit scripts.
+
+Do not attempt FireFU, GhostLock, Cube payloads, or generic Amlogic flashing procedures on this TV without independent proof of SoC/boot-ROM and firmware compatibility. No device modifications have been performed.
