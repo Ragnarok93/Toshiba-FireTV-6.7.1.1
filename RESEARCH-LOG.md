@@ -108,3 +108,19 @@ The user queried the following properties through read-only ADB:
 Assessment: the empty lock / verified-boot properties and `ro.bootloader=unknown` do not establish whether the bootloader is locked or unlockable; this build may simply not expose these Android properties. `secure_cpu=1`, `arb_enabled=1`, and `rpmb_state=1` are security-related indicators, but are not by themselves proof of a particular exploitable or non-exploitable boot chain. The incremental and fingerprint reconfirm the exact software build. Continue seeking device-specific boot ROM, BL2/U-Boot, recovery, and firmware evidence; do not treat generic Amlogic exploit compatibility as established.
 
 No reboot, write, or firmware change was performed.
+
+### Additional public exploit and firmware research (2026-10-24)
+
+Additional web research did not uncover a root/unlock exploit for `AFTBAMR311` / `blanche` on incremental `0011644897924`.
+
+Relevant findings:
+- The postmarketOS `amazon-blanche` page identifies Amlogic T950Z / Cortex-A53 / kernel 3.14.29, marks the device “not yet unlockable,” and records a user's Fire OS 6.2.8.9 unit as not unlockable: https://wiki.postmarketos.org/wiki/Insignia_Fire_TV_Edition_%28Full_HD%29_%28amazon-blanche%29
+- `aftv-full-unlock` is for the original Fire TV bootloader `51.1.0.2` or earlier and requires an already-rooted device. It is not a candidate for this Fire OS 6 `blanche` build: https://github.com/androidrbox/aftv-full-unlock
+- A current community unlock overview describes Amlogic download-mode methods for particular older Fire TV Cubes/Pendant and states those depend on specific device revisions / firmware cutoffs. No `blanche` support is listed: https://github.com/zenfyrdev/bootloader-unlock-wall-of-shame/blob/main/brands/amazon/README.md
+- A public FTVDB record confirms that Fire OS `6.7.1.1 (NS6711/5908)` also exists for the separate AFTMM / Fire TV Stick 4K (1st gen) family: https://ftvdb.com/firetv/firmware/com.amazon.mantis.android.os/. This is a different device and does not establish exploit or firmware compatibility with `blanche`; shared `NS6711` alone is not enough to transfer a root method.
+- A recent CVE-2026-43499/GhostLock reproduction report is specifically for Fire TV Stick 3rd Gen `sheldonp` / `AFTSSS`, Fire OS 7.7.1.6, Android 9, kernel 4.4.162+. It is not compatible evidence for this Amlogic `blanche` / Android 7.1.2 / kernel 3.14.29 device: https://github.com/accessmodifier364/cve-2026-43499-firetv-sheldonp-writeup
+
+### Assessment after these searches
+No verified public root, temporary-root, or bootloader-unlock method has been found for this exact television. The queried `ro.boot.flash.locked`, `ro.boot.verifiedbootstate`, and `ro.boot.secureboot` properties were empty, and `ro.bootloader=unknown`; this build does not expose useful standard lock-state values through those properties. `ro.boot.secure_cpu=1`, `ro.boot.arb_enabled=1`, and `ro.boot.rpmb_state=1` are security-related signals, but do not identify a specific exploit or prove the bootloader's state.
+
+Research should now prioritize the device's actual boot path and hardware revision: identify the exact T950Z/TXLX board and boot ROM / BL2 / U-Boot lineage; look for a matching stock update package or publicly documented service/flash mode; and compare the vendor kernel source/config with known vulnerabilities affecting kernel 3.14.29. Do not run a kernel exploit simply because it is old, and do not enter a write-capable burn/flash mode without a device-specific recovery plan. No modifications have been made.
