@@ -172,3 +172,27 @@ No exploit was executed and no device changes were made.
 
 ### Kernel config extraction attempt (follow-up)
 The first host-side extraction command used `adb exec-out shell cat /proc/config.gz`; the resulting file failed `gzip -t` with “not in gzip format”. Because `exec-out` expects the command directly, this attempt is inconclusive and is not evidence that `/proc/config.gz` is absent or invalid. Retry with `adb exec-out cat /proc/config.gz`, then validate the gzip stream before interpreting any configuration symbols.
+
+
+## 2026-10-24 — Kernel configuration extracted successfully
+
+### Confirmed symbols from the running kernel
+The user successfully copied `/proc/config.gz` to the Ubuntu host and validated/decompressed it. Matching lines:
+- `CONFIG_IKCONFIG=y`
+- `CONFIG_IKCONFIG_PROC=y`
+- `CONFIG_FUTEX=y`
+- `CONFIG_RT_MUTEXES=y`
+- `CONFIG_SLUB=y`
+- `CONFIG_SLUB_CPU_PARTIAL=y`
+- `CONFIG_SLUB_DEBUG=y`
+- `# CONFIG_SLAB is not set`
+- `# CONFIG_DEBUG_RT_MUTEXES is not set`
+- `# CONFIG_RT_MUTEX_TESTER is not set`
+- `# CONFIG_SLUB_DEBUG_ON is not set`
+- `# CONFIG_SLUB_STATS is not set`
+
+### Assessment
+The kernel configuration confirms futexes, RT mutexes, and SLUB are enabled—features relevant to evaluating CVE-2026-43499 and heap-layout assumptions. This is **necessary context, not proof of vulnerability or exploitability**. The kernel may contain vendor backports; exact code/build provenance and relevant structure/layout details remain unknown. Do not run the Hazel exploit or reuse its profiles on Blanche without a separately validated target profile.
+
+### Next evidence
+Prioritize read-only identification of the exact kernel build/source and matching firmware images; search the exposed configuration for compiler, architecture, futex/PI, ashmem, and allocator details. If a matching kernel image can be obtained, compare the relevant futex/RT-mutex code against the CVE fix. No exploit was run and no device changes were made.
