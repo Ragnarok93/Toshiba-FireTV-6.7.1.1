@@ -91,3 +91,20 @@ Do not attempt FireFU, GhostLock, Cube payloads, or generic Amlogic flashing pro
 The exact incremental `0011644897924` and fingerprint `Amazon/blanche/blanche:6.0/NS6711/5898N:user/amz-p,release-keys` were also searched publicly. Searches did not find an exact match for the incremental or U-Boot tag. Public firmware catalogs show `NS6711` / Fire OS 6.7.1.1 on other Fire TV hardware (for example, the AFTMM/mantis Stick 4K), but that does not establish shared bootloader, kernel, or exploit compatibility. The `NS6711` portion is a firmware family/build label, not a sufficient hardware identifier; never apply an AFTMM/mantis root procedure to `blanche` based on that match.
 
 The next safe data-gathering step is to query additional boot-state properties through read-only ADB (`ro.boot.flash.locked`, `ro.boot.verifiedbootstate`, `ro.boot.secureboot`, `ro.bootloader`, `ro.build.version.incremental`, and `ro.build.display.id`). These values may clarify the reported lock/secure-boot state but still will not themselves unlock the device. Do not reboot into bootloader or flash anything until recovery/transport behavior is understood.
+
+### Boot-state property results (2026-10-24)
+The user queried the following properties through read-only ADB:
+- `ro.boot.flash.locked`: empty / not exposed
+- `ro.boot.verifiedbootstate`: empty / not exposed
+- `ro.boot.secureboot`: empty / not exposed
+- `ro.boot.secure_cpu=1`
+- `ro.boot.arb_enabled=1`
+- `ro.boot.rpmb_state=1`
+- `ro.bootloader=unknown`
+- `ro.build.version.incremental=0011644897924`
+- `ro.build.display.id=NS6711`
+- `ro.build.fingerprint=Amazon/blanche/blanche:6.0/NS6711/5898N:user/amz-p,release-keys`
+
+Assessment: the empty lock / verified-boot properties and `ro.bootloader=unknown` do not establish whether the bootloader is locked or unlockable; this build may simply not expose these Android properties. `secure_cpu=1`, `arb_enabled=1`, and `rpmb_state=1` are security-related indicators, but are not by themselves proof of a particular exploitable or non-exploitable boot chain. The incremental and fingerprint reconfirm the exact software build. Continue seeking device-specific boot ROM, BL2/U-Boot, recovery, and firmware evidence; do not treat generic Amlogic exploit compatibility as established.
+
+No reboot, write, or firmware change was performed.
