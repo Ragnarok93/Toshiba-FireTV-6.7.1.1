@@ -150,3 +150,21 @@ A broad Android 7.1.2 CVE list includes vulnerabilities across Android component
 - Ubuntu CVE details: https://ubuntu.com/security/CVE-2026-43499
 - Firmware-specific Hazel port and its scope/warnings: https://github.com/dorlow/hazel-cve-2026-43499
 - Exact-device platform reference (marked not yet unlockable): https://wiki.postmarketos.org/wiki/Insignia_Fire_TV_Edition_%28Full_HD%29_%28amazon-blanche%29
+
+
+## 2026-10-24 — Runtime ABI and kernel config access
+
+### User-supplied read-only output
+- `uname -a`: `Linux localhost 3.14.29 #1 SMP PREEMPT Thu Dec 4 00:28:54 UTC 2025 armv8l`
+- `ro.product.cpu.abi=armeabi-v7a`
+- `ro.product.cpu.abi2=armeabi`
+- `ro.zygote=zygote32`
+- `ro.product.cpu.abilist=armeabi-v7a,armeabi`
+- The shell test reports `/proc/config.gz` readable, but the attempted `toybox zcat ... | grep ...` produced no matching lines. The config has **not yet been inspected successfully**; do not infer that options are disabled from this output.
+
+### Assessment / next check
+The running kernel reports `armv8l`, while Android userspace is 32-bit ARM. This makes an ARM32 build a plausible userspace target, but does not establish kernel exploit compatibility or prove that the processor/kernel can execute a particular exploit binary. Obtain the compressed config through ADB to the Ubuntu host and inspect it there, rather than relying on the device's toybox `zcat` implementation.
+
+CVE-2026-43499's upstream notice lists stable fixes as well as the mainline fix; the target's old kernel version and reported patch level are only clues. No exact source/config or vulnerable-code confirmation for the Blanche kernel has been found yet.
+
+No exploit was executed and no device changes were made.
