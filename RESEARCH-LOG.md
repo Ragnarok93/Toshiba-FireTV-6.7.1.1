@@ -168,3 +168,7 @@ The running kernel reports `armv8l`, while Android userspace is 32-bit ARM. This
 CVE-2026-43499's upstream notice lists stable fixes as well as the mainline fix; the target's old kernel version and reported patch level are only clues. No exact source/config or vulnerable-code confirmation for the Blanche kernel has been found yet.
 
 No exploit was executed and no device changes were made.
+
+
+### Kernel config extraction attempt (follow-up)
+The first host-side extraction command used `adb exec-out shell cat /proc/config.gz`; the resulting file failed `gzip -t` with “not in gzip format”. Because `exec-out` expects the command directly, this attempt is inconclusive and is not evidence that `/proc/config.gz` is absent or invalid. Retry with `adb exec-out cat /proc/config.gz`, then validate the gzip stream before interpreting any configuration symbols.
