@@ -21,3 +21,20 @@ Collect `dumpsys wifi`, `dumpsys wifip2p`, and filtered wireless-related `logcat
 ## Root / casting status
 
 No verified root method for the exact build is currently established. Root access would not itself guarantee Miracast or Google Cast receiver capability; Wi-Fi driver/firmware, Android framework support, receiver services, and media pipeline compatibility must be assessed separately.
+
+
+## Follow-up framework output (2026-10-24)
+
+The user supplied excerpts from `dumpsys wifi` and `dumpsys wifip2p`. The filtered wireless `logcat` output was too long to paste and has not yet been reviewed.
+
+### Observed
+
+- Wi-Fi client mode is connected: supplicant state `COMPLETED`, network state `CONNECTED/CONNECTED`, interface `wlan0`; the reported connection is on 5 GHz. Scan counters show successful scans.
+- The framework chipset-information block shows blank firmware and driver version values and `Supported Feature set: 0`.
+- `dumpsys wifip2p` reports `curState=P2pNotSupportedState`; no P2P group is formed, peer discovery is not started, and the P2P network is unavailable in `IDLE` state.
+
+### Interpretation and limits
+
+The current software/driver stack supports ordinary Wi-Fi client connectivity but reports Wi-Fi Direct as unsupported. This is a significant obstacle to conventional Miracast, which typically uses Wi-Fi Direct. It does not prove the physical radio can never support P2P; driver support, firmware, board configuration, and Android framework integration remain possible causes. Blank version strings and feature-set value zero should not be treated as proof of zero hardware capability.
+
+Google Cast receiver support remains undetermined. It can use the existing local network, but requires compatible receiver software and media integration. No underlying driver or firmware error has been confirmed because the filtered wireless `logcat` output was not included. Do not modify partitions or flash firmware based on these observations alone.
