@@ -64,22 +64,23 @@ major minor  #blocks  name
 179 0 7634944 mmcblk0
 179 1 4096 mmcblk0p1
 179 2 8192 mmcblk0p2
-179 3 4096 mmcblk0p4
-179 4 8192 mmcblk0p5
-179 5 122880 mmcblk0p6
-179 6 512 mmcblk0p7
-179 7 16384 mmcblk0p8
-179 8 16384 mmcblk0p9
-179 9 1433600 mmcblk0p10
-179 10 1228800 mmcblk0p11
-179 11 262144 mmcblk0p12
-179 12 4477440 mmcblk0p13
+179 3 8192 mmcblk0p3
+179 4 4096 mmcblk0p4
+179 5 8192 mmcblk0p5
+179 6 122880 mmcblk0p6
+179 7 512 mmcblk0p7
+179 8 16384 mmcblk0p8
+179 9 16384 mmcblk0p9
+179 10 1433600 mmcblk0p10
+179 11 1228800 mmcblk0p11
+179 12 262144 mmcblk0p12
+179 13 4477440 mmcblk0p13
 179 48 512 mmcblk0rpmb
 179 32 4096 mmcblk0boot1
 179 16 4096 mmcblk0boot0
 ```
 
-The table above preserves the captured output's rows as provided in the diagnostic transcript; partition minor-number/name mapping should be re-captured from the TV before using it for any analysis or operation. **Do not use this transcription to target a partition for writing.**
+This is a transcription of the captured output. **Do not use this transcription to target a partition for writing.**
 
 ## Mounts observed
 
