@@ -129,3 +129,24 @@ Research should now prioritize the device's actual boot path and hardware revisi
 A focused search for FireFU against `T950Z` / `amazon-blanche` returned no evidence of compatibility. The postmarketOS `amazon-blanche` page continues to be the closest exact-platform reference and marks the device not yet unlockable. FireFU's public documentation describes the older `amazon-needle` / Fire TV 3 path and explicit Fire OS version cutoffs; it should not be attempted on this television without proof of a shared vulnerable BootROM and matching bootloader path. Sources: https://wiki.postmarketos.org/wiki/Amazon_Fire_TV_3_%28amazon-needle%29 and https://wiki.postmarketos.org/wiki/Insignia_Fire_TV_Edition_%28Full_HD%29_%28amazon-blanche%29.
 
 A broad Android 7.1.2 CVE list includes vulnerabilities across Android components, but version overlap alone does not prove the relevant component is present, unpatched, reachable, or capable of yielding local root on this vendor build. No specific Android CVE has yet been validated against the TV's patched kernel/framework. The next avenue is to map the vendor kernel and security patch level, then audit concrete local privilege-escalation candidates against those exact sources rather than running a generic exploit.
+
+## 2026-10-24 — CVE-2026-43499 (GhostLock) assessed as a possible research lead
+
+### New finding
+- Linux kernel CVE-2026-43499 concerns a use-after-free hazard in RT-mutex priority-inheritance handling: `remove_waiter()` incorrectly uses `current` rather than `waiter->task` during proxy-lock rollback from `futex_requeue()`.
+- The upstream CVE notice says the bug was introduced in 2.6.39 and fixed in upstream 7.1-rc1; stable backports exist, so kernel version alone cannot prove the target is vulnerable.
+- The target reports kernel `3.14.29` and security patch level `2025-11-01`. The reported patch level predates the public CVE disclosure (2026-05-21), making this a credible audit candidate, but neither property proves the vulnerable code is present or exploitable.
+- A public Fire TV exploit port exists at [dorlow/hazel-cve-2026-43499](https://github.com/dorlow/hazel-cve-2026-43499). Its documented scope is the `hazel` platform, ARM32 Linux 4.9 firmware (tested on Toshiba AFTHA004 / `PS7716.5665N`) with exact firmware/kernel-specific profiles. It is **not a drop-in method** for this `blanche` / `AFTBAMR311` target.
+- The public exploit's strict identity/profile matching and kernel-layout dependence explicitly warn against reusing addresses or bypassing checks on another device. Porting would require independent inspection of the target kernel image, RT-mutex/futex code, architecture/ABI, kernel configuration, allocator/layout differences, and recovery plan.
+
+### Current assessment
+- This is the strongest newly found **potential temporary-root research lead**, not a verified root method for this TV.
+- Next read-only evidence to collect: `uname -a`, `getprop ro.product.cpu.abi`, `getprop ro.product.cpu.abi2`, `getprop ro.zygote`, and whether `/proc/config.gz` or a matching kernel image/config is accessible. These establish ABI and help assess whether the relevant futex PI and supporting kernel features are present.
+- Do not run the Hazel exploit, copy its profiles, force a profile match, or attempt a kernel exploit on this TV as-is. A wrong heap/layout assumption can panic or reboot the TV, and a crash would not demonstrate a safe path to root.
+- No device changes, exploit execution, partition writes, or flashing were performed.
+
+### Sources
+- Linux kernel CVE announcement: https://lists.openwall.net/linux-cve-announce/2026/05/21/7
+- Ubuntu CVE details: https://ubuntu.com/security/CVE-2026-43499
+- Firmware-specific Hazel port and its scope/warnings: https://github.com/dorlow/hazel-cve-2026-43499
+- Exact-device platform reference (marked not yet unlockable): https://wiki.postmarketos.org/wiki/Insignia_Fire_TV_Edition_%28Full_HD%29_%28amazon-blanche%29
