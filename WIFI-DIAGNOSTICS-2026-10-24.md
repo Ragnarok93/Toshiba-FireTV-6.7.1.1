@@ -38,3 +38,11 @@ The user supplied excerpts from `dumpsys wifi` and `dumpsys wifip2p`. The filter
 The current software/driver stack supports ordinary Wi-Fi client connectivity but reports Wi-Fi Direct as unsupported. This is a significant obstacle to conventional Miracast, which typically uses Wi-Fi Direct. It does not prove the physical radio can never support P2P; driver support, firmware, board configuration, and Android framework integration remain possible causes. Blank version strings and feature-set value zero should not be treated as proof of zero hardware capability.
 
 Google Cast receiver support remains undetermined. It can use the existing local network, but requires compatible receiver software and media integration. No underlying driver or firmware error has been confirmed because the filtered wireless `logcat` output was not included. Do not modify partitions or flash firmware based on these observations alone.
+
+## Filtered wireless log check (2026-10-24)
+
+The user ran a case-insensitive `adb logcat -d -b all` filter for `mt76x8`, `wlan_mt`, `wifip2p`, `WifiP2p`, `P2pNotSupported`, `supplicant`, Wi-Fi firmware, and P2P failure/error/unsupported terms, then limited the result to the last 60 lines. The command returned no output.
+
+Interpretation: no lines matching those terms were present in the accessible log buffers at the time of the check. This is not proof that no relevant errors occurred; logs may have rolled over, the device may use different tags/wording, or the relevant messages may not be logged. The empty result does not change the observed `P2pNotSupportedState` finding and does not identify its root cause.
+
+Next diagnostic: inspect framework feature declarations and wireless-display configuration read-only, rather than making system changes.
